@@ -10,7 +10,6 @@ require_once 'includes/config.php';
 require_once 'includes/scene.php';
 require_once 'includes/ui.php';
 require_once 'includes/controls.php';
-// require_once 'includes/collision.php';
 require_once 'includes/teleport.php';
 ?>
 <!DOCTYPE html>
@@ -33,7 +32,7 @@ require_once 'includes/teleport.php';
             padding: 8px;
             border-radius: 4px;
         }
-        
+
         /* Side Panel Styles */
         #sidePanel {
             position: absolute;
@@ -49,11 +48,11 @@ require_once 'includes/teleport.php';
             color: white;
             font-family: Arial, sans-serif;
         }
-        
+
         #sidePanel.open {
             left: 0;
         }
-        
+
         #menuToggle {
             position: absolute;
             left: 10px;
@@ -71,7 +70,7 @@ require_once 'includes/teleport.php';
             font-size: 24px;
             user-select: none;
         }
-        
+
         .teleport-btn {
             display: block;
             width: 100%;
@@ -84,11 +83,11 @@ require_once 'includes/teleport.php';
             cursor: pointer;
             transition: background-color 0.2s;
         }
-        
+
         .teleport-btn:hover {
             background-color: #666;
         }
-        
+
         h2 {
             color: #fff;
             border-bottom: 1px solid #555;
@@ -102,13 +101,13 @@ require_once 'includes/teleport.php';
     <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
 
     <?php
-    // Initialize components (only here!)
-    setupScene(10, 2, 0); // Spawn at a different place
+    // Initialize components
+    setupScene();
     setupUI();
     setupControls();
-    // setupCollision();
     setupTeleport();
-    animationLoop();
     ?>
+    
+    <script src="includes/collision.js"></script>
 </body>
 </html>
