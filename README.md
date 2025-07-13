@@ -62,12 +62,8 @@ This project is an interactive 3D virtual tour of the PCR campus, allowing users
 
 ## 🛠️ Getting Started
 
-1. **Clone this repository**
-2. **Run with a local PHP server:**
-   ```sh
-   php -S localhost:8080
-   ```
-3. **Open** [http://localhost:8080](http://localhost:8080) in your browser.
+1. **Access the website at wwww.xxxxxx.com**
+2. **asdsadsaa**
 
 ---
 
