@@ -3,9 +3,7 @@
 Welcome to the **Virtual Tour Kampus Politeknik Caltex Riau**!  
 This project is an interactive 3D virtual tour of the PCR campus, allowing users to explore buildings and facilities directly from their browser.
 
-<p align="center">
-  <img src="images/logo.png" alt="PCR Logo" width="200"/>
-</p>
+![PCR Logo](images/logo.png)
 
 ---
 
@@ -93,5 +91,4 @@ This project is for educational purposes at Politeknik Caltex Riau.
 
 ---
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Made%20by-Zulhardika%20Rendy%20Permana-blueviolet?style=for-the
+_Made by Zulhardika Rendy Permana_
