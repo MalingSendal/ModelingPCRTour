@@ -62,7 +62,7 @@ This project is an interactive 3D virtual tour of the PCR campus, allowing users
 
 ## 🛠️ Getting Started
 
-1. **Access the website at wwww.xxxxxx.com**
+1. **Access the website at www.xxxxxx.com**
 2. **asdsadsaa**
 
 ---
