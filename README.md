@@ -54,7 +54,6 @@ This project is an interactive 3D virtual tour of the PCR campus, allowing users
 | Campus Map             | ✅ Implemented |
 | Multiple Buildings     | ✅ Implemented |
 | Collision Detection    | ⏳ In Progress |
-| Mobile Optimization    | ⏳ In Progress |
 | Building Interiors     | ⏳ Planned     |
 | Audio/Info Hotspots    | ⏳ Planned     |
 
