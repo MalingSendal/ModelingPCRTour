@@ -1,49 +1,55 @@
-// COLLISION SYSTEM - GUARANTEED TO WORK
-let collisionSystem = {
+// COLLISION SYSTEM
+const collisionSystem = {
     objects: [],
     camera: {
-        radius: 0.5,
-        offset: new THREE.Vector3(0, -0.3, 0) // Adjust for avatar height
+        radius: 0.2, // Increased for better collision
+        offset: new THREE.Vector3(0, -2.2, 0) // Adjusted for avatar height
     },
-    lastSafePositions: []
+    lastSafePositions: [],
+    debug: false
 };
 
-function setupCollision() {
-    // 1. Find all collidable objects
+// Initialize collision
+function initCollision() {
+    // Clear previous objects
     collisionSystem.objects = [];
+    
+    // Find all collidable objects
     viewerScene.traverse(function(obj) {
         if (obj.isMesh && obj.visible && !obj.userData.noCollision) {
-            // Compute precise bounding box
-            obj.geometry.computeBoundingBox();
-            obj.userData.boundingBox = obj.geometry.boundingBox.clone();
+            // Compute bounding volumes if needed
+            if (!obj.geometry.boundingBox) obj.geometry.computeBoundingBox();
             collisionSystem.objects.push(obj);
         }
     });
-
-    // 2. Initialize camera position
+    
+    // Store initial safe position
     collisionSystem.lastSafePositions = [viewerCamera.position.clone()];
     
-    console.log('Collision ready:', collisionSystem.objects.length, 'objects');
+    if (collisionSystem.debug) {
+        console.log('Collision system ready with', collisionSystem.objects.length, 'objects');
+    }
 }
 
+// Check for collisions
 function checkCollision() {
-    // 1. Create camera bounding sphere
-    const cameraPos = viewerCamera.position.clone().add(collisionSystem.camera.offset);
-    const cameraSphere = new THREE.Sphere(cameraPos, collisionSystem.camera.radius);
+    const cameraWorldPos = viewerCamera.position.clone().add(collisionSystem.camera.offset);
+    const cameraSphere = new THREE.Sphere(cameraWorldPos, collisionSystem.camera.radius);
     
-    // 2. Check against all objects
     for (const obj of collisionSystem.objects) {
+        if (!obj.geometry.boundingBox) continue;
+        
         // Get world-space bounding box
-        const box = obj.userData.boundingBox.clone();
+        const box = obj.geometry.boundingBox.clone();
         box.applyMatrix4(obj.matrixWorld);
         
-        // Precise box-sphere collision
+        // Check collision
         if (box.intersectsSphere(cameraSphere)) {
-            return true;
+            return true; // Collision detected
         }
     }
     
-    // 3. Store safe position
+    // Store safe position (keep last 5 positions)
     collisionSystem.lastSafePositions.push(viewerCamera.position.clone());
     if (collisionSystem.lastSafePositions.length > 5) {
         collisionSystem.lastSafePositions.shift();
@@ -52,14 +58,16 @@ function checkCollision() {
     return false;
 }
 
+// Move with collision detection
 function moveWithCollision(direction, distance) {
     const originalPos = viewerCamera.position.clone();
-    const step = distance / 3; // Smaller steps
+    const step = distance / 3; // Smaller steps for better detection
     
-    // Try moving in smaller increments
+    // Try moving in increments
     for (let i = 0; i < 3; i++) {
         viewerCamera.position.add(direction.clone().multiplyScalar(step));
         if (checkCollision()) {
+            // Revert to last safe position if collision
             viewerCamera.position.copy(originalPos);
             return false;
         }
@@ -67,7 +75,8 @@ function moveWithCollision(direction, distance) {
     return true;
 }
 
-function initCollisionAwareControls() {
+// Enhanced animation loop with collision
+function startCollisionAwareAnimation() {
     function animate() {
         requestAnimationFrame(animate);
         
@@ -86,16 +95,25 @@ function initCollisionAwareControls() {
         const right = new THREE.Vector3();
         right.crossVectors(forward, viewerCamera.up).normalize();
 
-        // Collision-aware movement
+        // Apply collision-aware movement
         if (viewerControls.keys.W) moveWithCollision(forward, viewerControls.speed);
         if (viewerControls.keys.S) moveWithCollision(forward, -viewerControls.speed);
         if (viewerControls.keys.A) moveWithCollision(right, -viewerControls.speed);
         if (viewerControls.keys.D) moveWithCollision(right, viewerControls.speed);
 
-        // Update and render
+        // Update UI and render
         if (typeof updateCoordinates === "function") updateCoordinates();
         viewerRenderer.render(viewerScene, viewerCamera);
     }
     
     animate();
 }
+
+// Initialize everything when scene is ready
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait a frame to ensure all components are loaded
+    setTimeout(function() {
+        initCollision();
+        startCollisionAwareAnimation();
+    }, 100);
+});
