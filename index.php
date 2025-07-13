@@ -1,115 +1,342 @@
 <?php
-// index.php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// Load configuration FIRST
-require_once 'includes/config.php';
-
-// Then load other components
-require_once 'includes/scene.php';
-require_once 'includes/ui.php';
-require_once 'includes/controls.php';
-// require_once 'includes/collision.php';
-require_once 'includes/teleport.php';
+// halaman.php
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Model Viewer</title>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; }
-        #coordinates {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            color: white;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 8px;
-            border-radius: 4px;
-        }
-        
-        /* Side Panel Styles */
-        #sidePanel {
-            position: absolute;
-            left: -250px;
-            top: 0;
-            width: 250px;
-            height: 100%;
-            background-color: rgba(30, 30, 30, 0.9);
-            transition: left 0.3s ease;
-            z-index: 100;
-            padding: 20px;
-            box-sizing: border-box;
-            color: white;
-            font-family: Arial, sans-serif;
-        }
-        
-        #sidePanel.open {
-            left: 0;
-        }
-        
-        #menuToggle {
-            position: absolute;
-            left: 10px;
-            bottom: 10px;
-            width: 50px;
-            height: 50px;
-            background-color: rgba(30, 30, 30, 0.9);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 101;
-            color: white;
-            font-size: 24px;
-            user-select: none;
-        }
-        
-        .teleport-btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            background-color: #444;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        
-        .teleport-btn:hover {
-            background-color: #666;
-        }
-        
-        h2 {
-            color: #fff;
-            border-bottom: 1px solid #555;
-            padding-bottom: 10px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Virtual Tour Kampus</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden; /* Prevent scrollbars */
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #85a9f7;
+      color: #004d61;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden; /* Prevent scrollbars */
+    }
+
+    img.logo {
+      max-width: 80%;
+      height: auto;
+      max-height: 20vh;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 2em;
+      margin: 0 0 10px;
+    }
+
+    .buttons {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .btn {
+      background-color: rgba(0, 0, 0, 0.1);
+      border: none;
+      border-radius: 30px;
+      padding-left: 200px;
+      padding-right: 200px;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      font-size: 1em;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.3s ease, background-color 0.3s;
+      min-width: 250px;
+    }
+
+    .btn:hover {
+      background-color: rgba(0, 0, 0, 0.2);
+      transform: scale(1.05);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    @media (min-width: 600px) {
+      .btn {
+        font-size: 1.2em;
+        min-width: 300px;
+      }
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      position: relative;
+      width: 90%;
+      max-width: 700px;
+      max-height: 90vh;
+      overflow: auto;
+      text-align: left;
+      animation: fadeIn 0.3s ease forwards;
+      transform: scale(0.9);
+      opacity: 0;
+    }
+
+    .modal.fade-out .modal-content {
+      animation: fadeOut 0.3s ease forwards;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #000;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .map-image {
+      display: block;
+      max-width: none;
+    }
+
+    /* DEBUG: Outlines for all clickable areas (remove for deployment) */
+    #debug-outlines {
+      position: absolute;
+      left: 0;
+      top: 0;
+      pointer-events: none;
+      z-index: 20;
+    }
+    /* END DEBUG */
+
+    /* Animations */
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- Load Three.js first -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
 
-    <?php
-    // Initialize components
-    setupScene();
-    setupUI();
-    setupControls();
-    // setupCollision();
-    setupTeleport();
-    animationLoop();
-    ?>
+  <h2>Virtual Tour Kampus</h2>
+  <img src="images/logo.png" alt="Logo Politeknik Caltex Riau" class="logo"/>
+
+  <div class="buttons">
+    <button class="btn" onclick="openMap()">Mulai Virtual Tour</button>
+    <button class="btn" onclick="openManual()">Manual</button>
+  </div>
+
+  <!-- Manual Modal -->
+  <div class="modal" id="manualModal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeManual()">×</button>
+      <h3>Manual Virtual Tour</h3>
+      <ol>
+        <li>Bergerak menggunakan tombol keyboard W (maju), A (ke kiri), S (ke kanan), D (mundur)</li>
+        <li>Arahkan kamera dengan menggunakan mouse</li>
+        <li>Pada Virtual Tour, dapat berpindah dengan cepat menggunakan menu panel di bawah kanan</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Map Modal -->
+  <div class="modal" id="mapModal">
+    <div class="modal-content" style="padding:0; max-width:none; width:auto; text-align:center;">
+      <button class="close-btn" onclick="closeMap()">×</button>
+      <h3 style="margin-top:20px;">Peta Kampus - Klik Lokasi</h3>
+      <div style="display:inline-block; position:relative;">
+        <!-- DEBUG: Outlines for all clickable areas (remove for deployment) -->
+        <div id="debug-outlines"></div>
+        <!-- END DEBUG -->
+        <img
+          src="images/maps.png"
+          alt="Peta Kampus"
+          usemap="#campusmap"
+          class="map-image"
+          style="display:block; max-width:100vw; max-height:80vh; height:auto; width:auto;"
+          id="main-map-img"
+        />
+        <map name="campusmap">
+          <area shape="rect" coords="690,245,820,470" href="utama.php" alt="Gedung Utama" />
+          <area shape="rect" coords="603,53,751,110" href="kantin.php" alt="Kantin" />
+          <area shape="rect" coords="192,146,376,272" href="workshop.php" alt="Workshop" />
+          <area shape="rect" coords="622,612,700,713" href="sport.php" alt="Sport Hall" />
+          <area shape="rect" coords="320,526,596,678" href="gsg.php" alt="Gedung Serba Guna" />
+          <area shape="rect" coords="597,200,671,271" href="masjid.php" alt="Masjid" />
+        </map>
+        <!-- DEBUG: Remove this div for deployment -->
+        <div id="debug-coords" style="position:absolute; right:20px; bottom:15px; background:rgba(0,0,0,0.7); color:#fff; padding:4px 10px; border-radius:6px; font-size:14px; z-index:10; pointer-events:none; display:none;">
+          x: 0, y: 0
+        </div>
+        <!-- END DEBUG -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      modal.classList.add("show");
+      modal.classList.remove("fade-out");
+    }
+
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      modal.classList.add("fade-out");
+      setTimeout(() => {
+        modal.classList.remove("show");
+        modal.classList.remove("fade-out");
+      }, 300);
+    }
+
+    function openManual() {
+      openModal('manualModal');
+    }
+
+    function closeManual() {
+      closeModal('manualModal');
+    }
+
+    function openMap() {
+      openModal('mapModal');
+    }
+
+    function closeMap() {
+      closeModal('mapModal');
+    }
+
+    // Close modal if clicking outside
+    window.onclick = function(event) {
+      const manualModal = document.getElementById('manualModal');
+      const mapModal = document.getElementById('mapModal');
+      if (event.target === manualModal) closeManual();
+      if (event.target === mapModal) closeMap();
+    }
+
+    // === DEBUG: Show mouse coordinates on map image (remove for deployment) ===
+    document.addEventListener('DOMContentLoaded', function() {
+      const img = document.querySelector('#mapModal .map-image');
+      const coordsDiv = document.getElementById('debug-coords');
+      if (img && coordsDiv) {
+        img.addEventListener('mousemove', function(e) {
+          const rect = img.getBoundingClientRect();
+          const scaleX = img.naturalWidth / img.width;
+          const scaleY = img.naturalHeight / img.height;
+          const x = Math.round((e.clientX - rect.left) * scaleX);
+          const y = Math.round((e.clientY - rect.top) * scaleY);
+          coordsDiv.textContent = `x: ${x}, y: ${y}`;
+          coordsDiv.style.display = 'block';
+        });
+        img.addEventListener('mouseleave', function() {
+          coordsDiv.style.display = 'none';
+        });
+      }
+    });
+    // === END DEBUG ===
+
+    // === DEBUG: Outline all clickable areas (remove for deployment) ===
+    document.addEventListener('DOMContentLoaded', function() {
+      const img = document.querySelector('#mapModal .map-image');
+      const outlinesContainer = document.getElementById('debug-outlines');
+      const map = document.querySelector('map[name="campusmap"]');
+      if (img && outlinesContainer && map) {
+        function drawOutlines() {
+          outlinesContainer.innerHTML = "";
+          const scaleX = img.width / img.naturalWidth;
+          const scaleY = img.height / img.naturalHeight;
+          Array.from(map.querySelectorAll('area')).forEach(area => {
+            if (area.shape === "rect") {
+              const coords = area.coords.split(',').map(Number);
+              const left = coords[0] * scaleX;
+              const top = coords[1] * scaleY;
+              const width = (coords[2] - coords[0]) * scaleX;
+              const height = (coords[3] - coords[1]) * scaleY;
+              const outline = document.createElement('div');
+              outline.style.position = "absolute";
+              outline.style.left = left + "px";
+              outline.style.top = top + "px";
+              outline.style.width = width + "px";
+              outline.style.height = height + "px";
+              outline.style.border = "2px solid red";
+              outline.style.boxSizing = "border-box";
+              outline.style.pointerEvents = "none";
+              outlinesContainer.appendChild(outline);
+            }
+          });
+        }
+
+        // Position the outlines container over the image
+        function positionOutlinesContainer() {
+          outlinesContainer.style.left = img.offsetLeft + "px";
+          outlinesContainer.style.top = img.offsetTop + "px";
+          outlinesContainer.style.width = img.width + "px";
+          outlinesContainer.style.height = img.height + "px";
+        }
+
+        img.addEventListener('mouseenter', function() {
+          positionOutlinesContainer();
+          drawOutlines();
+        });
+        img.addEventListener('mousemove', function() {
+          positionOutlinesContainer();
+          drawOutlines();
+        });
+        img.addEventListener('mouseleave', function() {
+          outlinesContainer.innerHTML = "";
+        });
+
+        window.addEventListener('resize', function() {
+          positionOutlinesContainer();
+          drawOutlines();
+        });
+      }
+    });
+    // === END DEBUG ===
+  </script>
+
 </body>
 </html>

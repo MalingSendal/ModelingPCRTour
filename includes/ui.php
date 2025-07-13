@@ -6,6 +6,7 @@ function setupUI() {
         <button class="teleport-btn" data-location="5,2,0">B - Hallway</button>
         <button class="teleport-btn" data-location="-5,2,0">C - Classroom</button>
         <button class="teleport-btn" data-location="0,2,-5">D - Courtyard</button>
+        <button class="teleport-btn" id="backToMenuBtn" style="background-color:#b33;">⬅ Back to Main Menu</button>
     </div>
     
     <div id="menuToggle">☰</div>
@@ -16,10 +17,17 @@ function setupUI() {
     // UI controls using global objects
     const sidePanel = document.getElementById("sidePanel");
     const menuToggle = document.getElementById("menuToggle");
+    const backToMenuBtn = document.getElementById("backToMenuBtn");
     
     menuToggle.addEventListener("click", () => {
         sidePanel.classList.toggle("open");
     });
+
+    if (backToMenuBtn) {
+        backToMenuBtn.addEventListener("click", () => {
+            window.location.href = "index.php";
+        });
+    }
 
     window.updateCoordinates = function() {
         const coordDisplay = document.getElementById("coordinates");

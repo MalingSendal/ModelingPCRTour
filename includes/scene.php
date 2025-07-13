@@ -1,5 +1,5 @@
 <?php
-function setupScene() {
+function setupScene($cameraX = 0, $cameraY = 2, $cameraZ = 5) {
     echo '<script>
     // Create and expose Three.js objects
     window.viewerScene = new THREE.Scene();
@@ -29,7 +29,7 @@ function setupScene() {
     );
 
     // Initial camera position
-    viewerCamera.position.set(0, 2, 5);
+    viewerCamera.position.set('.$cameraX.', '.$cameraY.', '.$cameraZ.');
     </script>';
 }
 ?>
