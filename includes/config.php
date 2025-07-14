@@ -1,6 +1,6 @@
 <?php
 // config.php
-define('MODEL_PATH', 'assets/school.glb');  // Define the model path
+define('MODEL_PATH', 'assets/tmptpcr.glb');  // Define the model path
 define('THREEJS_VERSION', 'r128');          // Three.js version
 
 // Set Content Security Policy header
