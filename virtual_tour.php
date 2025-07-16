@@ -36,6 +36,7 @@ header('Content-Type: text/html; charset=UTF-8');
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            pointer-events: auto;
         }
         #sidePanel {
             position: absolute;
@@ -78,6 +79,18 @@ header('Content-Type: text/html; charset=UTF-8');
             cursor: pointer;
             margin: 10px 0;
         }
+        /* START COORDINATE DISPLAY CSS - Remove this block to disable coordinate display */
+        #coordinates {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+        /* END COORDINATE DISPLAY CSS */
     </style>
 </head>
 <body>
@@ -101,6 +114,9 @@ header('Content-Type: text/html; charset=UTF-8');
             <button onclick="teleportTo(40, 1.6, 40)">Auditorium</button> <!-- Change coordinates (x, y, z) here for Building B Auditorium -->
         </div>
     </div>
+    <!-- START COORDINATE DISPLAY HTML - Remove this element to disable coordinate display -->
+    <div id="coordinates">X: 0, Y: 0, Z: 0</div>
+    <!-- END COORDINATE DISPLAY HTML -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
@@ -139,20 +155,20 @@ header('Content-Type: text/html; charset=UTF-8');
         let isMouseDown = false;
         let prevMouseX = 0;
         let prevMouseY = 0;
-        const sensitivity = 0.002; // Mouse sensitivity
+        const sensitivity = 0.002;
         let yaw = 0;
         let pitch = 0;
 
         // Mouse events for drag-to-look
         document.addEventListener('mousedown', (event) => {
-            if (event.button === 0) { // Left mouse button
+            if (event.button === 0) {
                 isMouseDown = true;
                 prevMouseX = event.clientX;
                 prevMouseY = event.clientY;
             }
         });
         document.addEventListener('mouseup', (event) => {
-            if (event.button === 0) { // Left mouse button
+            if (event.button === 0) {
                 isMouseDown = false;
             }
         });
@@ -166,7 +182,7 @@ header('Content-Type: text/html; charset=UTF-8');
                 // Update yaw and pitch
                 yaw -= deltaX * sensitivity;
                 pitch -= deltaY * sensitivity;
-                pitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitch)); // Clamp pitch
+                pitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitch));
 
                 // Apply rotation to camera using quaternion
                 const euler = new THREE.Euler(pitch, yaw, 0, 'YXZ');
@@ -251,6 +267,10 @@ header('Content-Type: text/html; charset=UTF-8');
             controls.getObject().position.set(x, y, z);
         }
 
+        // START COORDINATE DISPLAY JS - Remove this block to disable coordinate display
+        const coordDisplay = document.getElementById('coordinates');
+        // END COORDINATE DISPLAY JS
+
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
@@ -299,6 +319,7 @@ header('Content-Type: text/html; charset=UTF-8');
 
             // Collision detection
             let canMove = true;
+            let collisionDirection = null;
             for (let i = 0; i < collisionRays.length; i++) {
                 collisionRays[i].ray.origin.copy(camera.position);
                 collisionRays[i].ray.direction.copy(rayDirections[i]).applyQuaternion(controls.getObject().quaternion);
@@ -306,6 +327,7 @@ header('Content-Type: text/html; charset=UTF-8');
                 for (let collision of collisions) {
                     if (collision.distance < 0.5) {
                         canMove = false;
+                        collisionDirection = rayDirections[i];
                         break;
                     }
                 }
@@ -318,10 +340,19 @@ header('Content-Type: text/html; charset=UTF-8');
             } else {
                 velocity.x = 0;
                 velocity.z = 0;
+                if (collisionDirection) {
+                    const pushBack = collisionDirection.clone().negate().multiplyScalar(0.1);
+                    controls.getObject().position.add(pushBack);
+                    camera.position.add(pushBack);
+                }
             }
 
             // Update camera position
             controls.getObject().position.add(velocity);
+
+            // START COORDINATE DISPLAY UPDATE - Remove this block to disable coordinate display
+            coordDisplay.textContent = `X: ${camera.position.x.toFixed(2)}, Y: ${camera.position.y.toFixed(2)}, Z: ${camera.position.z.toFixed(2)}`;
+            // END COORDINATE DISPLAY UPDATE
 
             renderer.render(scene, camera);
         }
