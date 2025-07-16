@@ -51,7 +51,7 @@ header('Content-Type: text/html; charset=UTF-8');
         scene.add(controls.getObject());
 
         // Camera initial position
-        camera.position.set(0, 400, 0); // Eye-level height (1.6m)
+        camera.position.set(0, 1.6, 0); // Eye-level height (1.6m)
 
         // Movement variables
         const moveSpeed = 0.1;
@@ -79,7 +79,7 @@ header('Content-Type: text/html; charset=UTF-8');
         // Load GLB model
         const loader = new THREE.GLTFLoader();
         loader.load(
-            'assets/tmptpcr.glb', // Path to your GLB model
+            'assets/tmptpcr.glb',
             (gltf) => {
                 scene.add(gltf.scene);
                 console.log('Model loaded successfully');
@@ -115,24 +115,30 @@ header('Content-Type: text/html; charset=UTF-8');
         function animate() {
             requestAnimationFrame(animate);
 
-            // Update raycaster origin
+            // Update raycaster origin (from slightly above camera to ensure detection)
             raycaster.ray.origin.copy(camera.position);
+            raycaster.ray.origin.y += 0.1; // Small offset to avoid clipping through floor
 
             // Check for floor height
             const intersects = raycaster.intersectObjects(scene.children, true);
-            let floorHeight = -100; // Default low value if no floor
+            let floorHeight = null;
             for (let intersect of intersects) {
-                if (intersect.object.name.includes('floor')) {
+                if (intersect.point && intersect.distance < 10) { // Limit detection range to 10 units
                     floorHeight = intersect.point.y;
                     break;
                 }
             }
 
-            // Adjust camera height (snap to floor + eye height)
-            if (floorHeight > -100) {
-                camera.position.y = floorHeight + 1.6; // Eye-level height
+            // Adjust camera height
+            if (floorHeight !== null) {
+                camera.position.y = floorHeight + 1.6; // Snap to floor + eye height
+                velocity.y = 0; // Reset gravity when on floor
             } else {
-                velocity.y -= gravity; // Apply gravity if no floor
+                velocity.y -= gravity; // Apply gravity only when no floor is detected
+                if (camera.position.y < -10) { // Prevent falling too far
+                    camera.position.y = 1.6; // Reset to default height
+                    velocity.y = 0;
+                }
             }
 
             // Apply velocity to camera position
