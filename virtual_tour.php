@@ -26,7 +26,7 @@ header('Content-Type: text/html; charset=UTF-8');
             left: 10px;
             width: 50px;
             height: 50px;
-            border-radius: 50%; /* Circular button */
+            border-radius: 50%;
             background: rgba(0, 0, 0, 0.7);
             color: white;
             border: none;
@@ -35,7 +35,7 @@ header('Content-Type: text/html; charset=UTF-8');
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000; /* Ensure button stays in front */
+            z-index: 1000;
         }
         #sidePanel {
             position: absolute;
@@ -48,7 +48,7 @@ header('Content-Type: text/html; charset=UTF-8');
             padding: 20px;
             transition: left 0.3s ease;
             font-family: Arial, sans-serif;
-            z-index: 999; /* Below menu button */
+            z-index: 999;
         }
         #sidePanel.open {
             left: 0;
@@ -69,10 +69,10 @@ header('Content-Type: text/html; charset=UTF-8');
         }
         #sidePanel .submenu {
             margin-left: 20px;
-            display: none; /* Hidden by default */
+            display: none;
         }
         #sidePanel .submenu.open {
-            display: block; /* Show when toggled */
+            display: block;
         }
         #sidePanel h3 {
             cursor: pointer;
@@ -82,10 +82,10 @@ header('Content-Type: text/html; charset=UTF-8');
 </head>
 <body>
     <div id="instructions">
-        <p>Use WASD to move, mouse to look around.</p>
-        <p>Click to lock the mouse cursor.</p>
+        <p>Use WASD to move, hold left-click and drag to look around.</p>
+        <p>Click menu button to open navigation.</p>
     </div>
-    <button id="menuButton">☰</button> <!-- Hamburger icon for menu -->
+    <button id="menuButton">☰</button>
     <div id="sidePanel">
         <button id="mainMenuButton">Back to Main Menu</button>
         <h3 onclick="toggleMenu('buildingA')">Building A</h3>
@@ -121,8 +121,11 @@ header('Content-Type: text/html; charset=UTF-8');
 
         // First-person controls
         const controls = new THREE.PointerLockControls(camera, document.body);
-        document.addEventListener('click', () => controls.lock());
         scene.add(controls.getObject());
+
+        // Disable default pointer lock behavior
+        controls.lock = function() {};
+        controls.unlock = function() {};
 
         // Camera initial position
         camera.position.set(0, 1.6, 0);
@@ -131,6 +134,45 @@ header('Content-Type: text/html; charset=UTF-8');
         const moveSpeed = 0.1;
         const velocity = new THREE.Vector3();
         let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
+
+        // Mouse control variables
+        let isMouseDown = false;
+        let prevMouseX = 0;
+        let prevMouseY = 0;
+        const sensitivity = 0.002; // Mouse sensitivity
+        let yaw = 0;
+        let pitch = 0;
+
+        // Mouse events for drag-to-look
+        document.addEventListener('mousedown', (event) => {
+            if (event.button === 0) { // Left mouse button
+                isMouseDown = true;
+                prevMouseX = event.clientX;
+                prevMouseY = event.clientY;
+            }
+        });
+        document.addEventListener('mouseup', (event) => {
+            if (event.button === 0) { // Left mouse button
+                isMouseDown = false;
+            }
+        });
+        document.addEventListener('mousemove', (event) => {
+            if (isMouseDown) {
+                const deltaX = event.clientX - prevMouseX;
+                const deltaY = event.clientY - prevMouseY;
+                prevMouseX = event.clientX;
+                prevMouseY = event.clientY;
+
+                // Update yaw and pitch
+                yaw -= deltaX * sensitivity;
+                pitch -= deltaY * sensitivity;
+                pitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitch)); // Clamp pitch
+
+                // Apply rotation to camera using quaternion
+                const euler = new THREE.Euler(pitch, yaw, 0, 'YXZ');
+                controls.getObject().quaternion.setFromEuler(euler);
+            }
+        });
 
         // Keyboard controls
         document.addEventListener('keydown', (event) => {
