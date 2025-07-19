@@ -79,7 +79,7 @@ header('Content-Type: text/html; charset=UTF-8');
             cursor: pointer;
             margin: 10px 0;
         }
-        /* START COORDINATE DISPLAY CSS - Remove this block to disable coordinate display */
+        /* START COORDINATE DISPLAY CSS */
         #coordinates {
             position: absolute;
             bottom: 10px;
@@ -91,13 +91,57 @@ header('Content-Type: text/html; charset=UTF-8');
             font-size: 14px;
         }
         /* END COORDINATE DISPLAY CSS */
+        /* Info Popup Styles */
+        #infoPopup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #333;
+            padding: 20px;
+            display: none;
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #infoPopup img {
+            width: 100%;
+            height: auto;
+            max-height: 300px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+        #infoPopup p {
+            margin: 10px 0;
+            color: #333;
+        }
+        #closePopup {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 24px;
+            text-align: center;
+        }
+        #closePopup:hover {
+            background: #cc0000;
+        }
     </style>
 </head>
 <body>
     <div id="instructions">
         <p>Use WASD to move, hold left-click and drag to look around.</p>
         <p>Click menu button to open navigation.</p>
-        <p>Approach glowing spheres to teleport.</p>
+        <p>Approach glowing spheres to teleport or blue spheres for info.</p>
     </div>
     <button id="menuButton">☰</button>
     <div id="sidePanel">
@@ -120,9 +164,15 @@ header('Content-Type: text/html; charset=UTF-8');
         <h3 onclick="teleportTo(62.28, 2.64, -84.68)" style="cursor:pointer; margin:10px 0;">Masjid Madinatul Ilm'</h3>
         <h3 onclick="teleportTo(-2.93, 5.66, -0.83)" style="cursor:pointer; margin:10px 0;">Un-Stuck</h3>
     </div>
-    <!-- START COORDINATE DISPLAY HTML - Remove this element to disable coordinate display -->
+    <!-- START COORDINATE DISPLAY HTML -->
     <div id="coordinates">X: 0, Y: 0, Z: 0</div>
     <!-- END COORDINATE DISPLAY HTML -->
+    <!-- Info Popup HTML -->
+    <div id="infoPopup">
+        <button id="closePopup">X</button>
+        <img id="infoImage" src="" alt="Info Image">
+        <p id="infoText"></p>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
@@ -154,7 +204,7 @@ header('Content-Type: text/html; charset=UTF-8');
         controls.unlock = function() {};
 
         // Camera initial position
-        camera.position.set(0, 1.4, 0);
+        camera.position.set(0, 6, 0);
 
         // Movement variables
         const moveSpeed = 0.1;
@@ -474,15 +524,51 @@ header('Content-Type: text/html; charset=UTF-8');
             }
         ];
 
-        // Create visible teleport point
+        // Info points setup
+        const infoPoints = [
+            {
+                position: new THREE.Vector3(-204, 3.25, -97.04), // Near Kelas
+                image: 'info/kelas_info.jpg',
+                text: 'Welcome to the Classroom! This is where students engage in daily learning activities.',
+                radius: 2.0,
+                sphere: null,
+                active: false
+            },
+            {
+                position: new THREE.Vector3(-260.74, 2.59, -94.50), // Near Perpustakaan
+                image: 'info/library_info.jpg',
+                text: 'The Library offers a vast collection of books and resources for students and faculty.',
+                radius: 2.0,
+                sphere: null,
+                active: false
+            },
+            {
+                position: new THREE.Vector3(118.88, 2.47, -80.25), // Near Kantin
+                image: 'info/canteen_info.jpg',
+                text: 'The Canteen is a popular spot for students to enjoy meals and socialize.',
+                radius: 2.0,
+                sphere: null,
+                active: false
+            }
+        ];
+
+        // Create visible teleport and info points
         teleportPoints.forEach(point => {
             const geometry = new THREE.SphereGeometry(0.3, 32, 32);
             const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.7 });
             point.sphere = new THREE.Mesh(geometry, material);
             point.sphere.position.copy(point.position);
             scene.add(point.sphere);
+            point.sphere.scale.set(1, 1, 1);
+            point.pulsePhase = Math.random() * Math.PI * 2;
+        });
 
-            // Add subtle pulsing animation
+        infoPoints.forEach(point => {
+            const geometry = new THREE.SphereGeometry(0.3, 32, 32);
+            const material = new THREE.MeshBasicMaterial({ color: 0x0000ff, transparent: true, opacity: 0.7 });
+            point.sphere = new THREE.Mesh(geometry, material);
+            point.sphere.position.copy(point.position);
+            scene.add(point.sphere);
             point.sphere.scale.set(1, 1, 1);
             point.pulsePhase = Math.random() * Math.PI * 2;
         });
@@ -492,7 +578,7 @@ header('Content-Type: text/html; charset=UTF-8');
         raycaster.ray.direction.set(0, -1, 0);
         const gravity = 0.1;
 
-        // Basic collision detection rays (forward, backward, left, right)
+        // Basic collision detection rays
         const collisionRays = [
             new THREE.Raycaster(),
             new THREE.Raycaster(),
@@ -530,9 +616,27 @@ header('Content-Type: text/html; charset=UTF-8');
             controls.getObject().position.set(x, y, z);
         }
 
-        // START COORDINATE DISPLAY JS - Remove this block to disable coordinate display
+        // Info popup handling
+        const infoPopup = document.getElementById('infoPopup');
+        const infoImage = document.getElementById('infoImage');
+        const infoText = document.getElementById('infoText');
+        const closePopup = document.getElementById('closePopup');
+
+        function showInfoPopup(imageSrc, text) {
+            infoImage.src = imageSrc;
+            infoText.textContent = text;
+            infoPopup.style.display = 'block';
+        }
+
+        function hideInfoPopup() {
+            infoPopup.style.display = 'none';
+            infoPoints.forEach(point => point.active = false);
+        }
+
+        closePopup.addEventListener('click', hideInfoPopup);
+
+        // Coordinate display
         const coordDisplay = document.getElementById('coordinates');
-        // END COORDINATE DISPLAY JS
 
         // Animation loop
         function animate() {
@@ -613,23 +717,36 @@ header('Content-Type: text/html; charset=UTF-8');
             // Update camera position
             controls.getObject().position.add(velocity);
 
-            // Check for teleport points
+            // Check teleport points
             teleportPoints.forEach(point => {
-                // Pulse animation
                 point.pulsePhase += 0.05;
                 const scale = 1 + 0.1 * Math.sin(point.pulsePhase);
                 point.sphere.scale.set(scale, scale, scale);
 
-                // Check distance to teleport point
                 const distance = camera.position.distanceTo(point.position);
                 if (distance < point.radius) {
                     teleportTo(point.destination.x, point.destination.y, point.destination.z);
                 }
             });
 
-            // START COORDINATE DISPLAY UPDATE - Remove this block to disable coordinate display
+            // Check info points
+            infoPoints.forEach(point => {
+                point.pulsePhase += 0.05;
+                const scale = 1 + 0.1 * Math.sin(point.pulsePhase);
+                point.sphere.scale.set(scale, scale, scale);
+
+                const distance = camera.position.distanceTo(point.position);
+                if (distance < point.radius && !point.active) {
+                    point.active = true;
+                    showInfoPopup(point.image, point.text);
+                } else if (distance >= point.radius && point.active) {
+                    point.active = false;
+                    hideInfoPopup();
+                }
+            });
+
+            // Update coordinate display
             coordDisplay.textContent = `X: ${camera.position.x.toFixed(2)}, Y: ${camera.position.y.toFixed(2)}, Z: ${camera.position.z.toFixed(2)}`;
-            // END COORDINATE DISPLAY UPDATE
 
             renderer.render(scene, camera);
         }
