@@ -179,6 +179,8 @@
         <li>Bergerak menggunakan tombol keyboard W (maju), A (ke kiri), S (ke kanan), D (mundur)</li>
         <li>Arahkan kamera dengan menggunakan mouse</li>
         <li>Pada Virtual Tour, dapat berpindah dengan cepat menggunakan menu panel di bawah kanan</li>
+        <li>Jika tersangkut (stuck) gunakan tombol "Un-Stuck" pada sidepanel</li>
+        <li>Tutup pop up dengan menekan tombol "X" di pojok kanan atas</li>
       </ol>
     </div>
   </div>

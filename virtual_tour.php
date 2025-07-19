@@ -102,18 +102,23 @@ header('Content-Type: text/html; charset=UTF-8');
     <button id="menuButton">☰</button>
     <div id="sidePanel">
         <button id="mainMenuButton">Back to Main Menu</button>
-        <h3 onclick="toggleMenu('buildingA')">Building A</h3>
+        <h3 onclick="toggleMenu('buildingA')">Gedung Utama</h3>
         <div id="buildingA" class="submenu">
-            <button onclick="teleportTo(10, 1.6, 10)">Class</button>
-            <button onclick="teleportTo(15, 1.6, 15)">Lab</button>
-            <button onclick="teleportTo(20, 1.6, 20)">Library</button>
+            <button onclick="teleportTo(-204, 3.25, -97.04)">Kelas</button>
+            <button onclick="teleportTo(-210.29, 2.90, -90.90)">Laboratorium</button>
+            <button onclick="teleportTo(-260.74, 2.59, -94.50)">Perpustakaan</button>
         </div>
-        <h3 onclick="toggleMenu('buildingB')">Building B</h3>
+        <h3 onclick="toggleMenu('buildingB')">Gedung Serba Guna</h3>
         <div id="buildingB" class="submenu">
-            <button onclick="teleportTo(30, 1.6, 30)">Class</button>
+            <button onclick="teleportTo(-77.65, 3.00, -145.04)">Class</button>
             <button onclick="teleportTo(35, 1.6, 35)">Lab</button>
             <button onclick="teleportTo(40, 1.6, 40)">Auditorium</button>
         </div>
+        <h3 onclick="teleportTo(118.88, 2.47, -80.25)" style="cursor:pointer; margin:10px 0;">Kantin</h3>
+        <h3 onclick="teleportTo(74.12, 4.23, -243.78)" style="cursor:pointer; margin:10px 0;">Workshop</h3>
+        <h3 onclick="teleportTo(-110.69, 3.85, -116.70)" style="cursor:pointer; margin:10px 0;">Sport Hall</h3>
+        <h3 onclick="teleportTo(62.28, 2.64, -84.68)" style="cursor:pointer; margin:10px 0;">Masjid Madinatul Ilm'</h3>
+        <h3 onclick="teleportTo(-2.93, 5.66, -0.83)" style="cursor:pointer; margin:10px 0;">Un-Stuck</h3>
     </div>
     <!-- START COORDINATE DISPLAY HTML - Remove this element to disable coordinate display -->
     <div id="coordinates">X: 0, Y: 0, Z: 0</div>
@@ -510,7 +515,7 @@ header('Content-Type: text/html; charset=UTF-8');
 
         // Main menu button
         document.getElementById('mainMenuButton').addEventListener('click', () => {
-            window.location.reload();
+            window.location.href = "index.php";
         });
 
         // Collapsible menu toggle
