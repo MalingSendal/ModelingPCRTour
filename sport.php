@@ -668,7 +668,15 @@ header('Content-Type: text/html; charset=UTF-8');
                 radius: 2.0,
                 sphere: null,
                 active: false
-            }
+            },
+            {
+                position: new THREE.Vector3(-77.65, 2.91, -145.04), // Near GSG
+                image: 'info/gsg_info.jpg',
+                text: 'Gedung Serba Guna (GSG)\' is a multi-purpose building for various activities.',
+                radius: 2.0,
+                sphere: null,
+                active: false
+            }    
         ];
 
         // Create visible teleport and info points
