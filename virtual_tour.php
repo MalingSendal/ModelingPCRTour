@@ -630,8 +630,16 @@ header('Content-Type: text/html; charset=UTF-8');
                 active: false
             },
             {
-                position: new THREE.Vector3(-210.29, 2.87, -90.90), // Near Laboratorium
-                image: 'info/laboratorium_info.jpg',
+                position: new THREE.Vector3(-210.29, 2.87, -90.90), // Near LabJTI
+                image: 'info/labJTI_info.jpg',
+                text: 'The Laboratorium is equipped with advanced technology for practical learning.',
+                radius: 2.0,
+                sphere: null,
+                active: false
+            },
+            {
+                position: new THREE.Vector3(-322.96, 2.91, -98.99), // Near LabJTIN
+                image: 'info/labJTIN_info.jpg',
                 text: 'The Laboratorium is equipped with advanced technology for practical learning.',
                 radius: 2.0,
                 sphere: null,

@@ -9,95 +9,218 @@ header('Content-Type: text/html; charset=UTF-8');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>School 3D Virtual Tour</title>
     <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; }
-        #instructions {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: white;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #85a9f7;
+            color: #004d61;
             font-family: Arial, sans-serif;
         }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        #instructions {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 77, 97, 0.8);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
         #menuButton {
             position: absolute;
-            bottom: 10px;
-            left: 10px;
-            width: 50px;
-            height: 50px;
+            bottom: 15px;
+            left: 15px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 77, 97, 0.8);
             color: white;
             border: none;
             cursor: pointer;
-            font-size: 24px;
+            font-size: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: transform 0.3s ease, background-color 0.3s;
             z-index: 1000;
             pointer-events: auto;
         }
+
+        #menuButton:hover {
+            background: rgba(0, 77, 97, 0.9);
+            transform: scale(1.1);
+        }
+
+        #menuButton:active {
+            transform: scale(0.95);
+        }
+
         #sidePanel {
             position: absolute;
             top: 0;
-            left: -250px;
-            width: 250px;
+            left: -270px;
+            width: 270px;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 77, 97, 0.95);
             color: white;
-            padding: 20px;
+            padding: 25px;
             transition: left 0.3s ease;
             font-family: Arial, sans-serif;
             z-index: 999;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
         }
+
         #sidePanel.open {
             left: 0;
         }
+
         #sidePanel button {
             display: block;
             width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            background: #333;
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: rgba(255, 255, 255, 0.1);
             color: white;
             border: none;
+            border-radius: 8px;
             cursor: pointer;
             text-align: left;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s;
         }
+
         #sidePanel button:hover {
-            background: #555;
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
         }
+
         #sidePanel .submenu {
-            margin-left: 20px;
+            margin-left: 25px;
             display: none;
         }
+
         #sidePanel .submenu.open {
             display: block;
         }
+
         #sidePanel h3 {
             cursor: pointer;
-            margin: 10px 0;
+            margin: 15px 0;
+            font-size: 18px;
+            color: #ffffff;
+            transition: color 0.3s;
         }
-        /* START COORDINATE DISPLAY CSS - Remove this block to disable coordinate display */
+
+        #sidePanel h3:hover {
+            color: #e0e0e0;
+        }
+
+        /* Coordinate Display */
         #coordinates {
             position: absolute;
-            bottom: 10px;
-            right: 10px;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(0, 77, 97, 0.8);
             color: white;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
+            padding: 10px 15px;
+            border-radius: 8px;
             font-family: Arial, sans-serif;
             font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
         }
-        /* END COORDINATE DISPLAY CSS */
+
+        /* Info Popup Styles */
+        #infoPopup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #004d61;
+            border-radius: 12px;
+            padding: 25px;
+            display: none;
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        #infoPopup img {
+            width: 100%;
+            height: auto;
+            max-height: 320px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        #infoPopup p {
+            margin: 12px 0;
+            color: #004d61;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        #closePopup {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 28px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        #closePopup:hover {
+            background: #cc0000;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+        }
     </style>
 </head>
 <body>
     <div id="instructions">
         <p>Use WASD to move, hold left-click and drag to look around.</p>
         <p>Click menu button to open navigation.</p>
-        <p>Approach glowing spheres to teleport.</p>
+        <p>Approach glowing spheres to teleport or blue spheres for info.</p>
     </div>
     <button id="menuButton">☰</button>
     <div id="sidePanel">
@@ -120,9 +243,15 @@ header('Content-Type: text/html; charset=UTF-8');
         <h3 onclick="teleportTo(62.28, 2.64, -84.68)" style="cursor:pointer; margin:10px 0;">Masjid Madinatul Ilm'</h3>
         <h3 onclick="teleportTo(-2.93, 5.66, -0.83)" style="cursor:pointer; margin:10px 0;">Un-Stuck</h3>
     </div>
-    <!-- START COORDINATE DISPLAY HTML - Remove this element to disable coordinate display -->
+    <!-- START COORDINATE DISPLAY HTML -->
     <div id="coordinates">X: 0, Y: 0, Z: 0</div>
     <!-- END COORDINATE DISPLAY HTML -->
+    <!-- Info Popup HTML -->
+    <div id="infoPopup">
+        <button id="closePopup">X</button>
+        <img id="infoImage" src="" alt="Info Image">
+        <p id="infoText"></p>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
@@ -154,7 +283,7 @@ header('Content-Type: text/html; charset=UTF-8');
         controls.unlock = function() {};
 
         // Camera initial position
-        camera.position.set(0, 1.4, 0);
+        camera.position.set(0, 6, 0);
 
         // Movement variables
         const moveSpeed = 0.1;
@@ -474,15 +603,91 @@ header('Content-Type: text/html; charset=UTF-8');
             }
         ];
 
-        // Create visible teleport point
+        // Info points setup
+        const infoPoints = [
+            {
+                position: new THREE.Vector3(-204, 3.25, -97.04), // Near Kelas
+                image: 'info/kelas_info.jpg',
+                text: 'Welcome to the Classroom! This is where students engage in daily learning activities.',
+                radius: 2.0,
+                sphere: null,
+                active: false
+            },
+            {
+                position: new THREE.Vector3(-260.74, 2.59, -94.50), // Near Perpustakaan
+                image: 'info/library_info.jpg',
+                text: 'The Library offers a vast collection of books and resources for students and faculty.',
+                radius: 2.0,
+                sphere: null,
+                active: false
+            },
+            {
+                position: new THREE.Vector3(118.88, 2.47, -80.25), // Near Kantin
+                image: 'info/canteen_info.jpg',
+                text: 'The Canteen is a popular spot for students to enjoy meals and socialize.',
+                radius: 2.0,
+                sphere: null,
+                active: false
+            },
+            {
+                position: new THREE.Vector3(-210.29, 2.87, -90.90), // Near LabJTI
+                image: 'info/labJTI_info.jpg',
+                text: 'The Laboratorium is equipped with advanced technology for practical learning.',
+                radius: 2.0,
+                sphere: null,
+                active: false
+            },
+            {
+                position: new THREE.Vector3(-322.96, 2.91, -98.99), // Near LabJTIN
+                image: 'info/labJTIN_info.jpg',
+                text: 'The Laboratorium is equipped with advanced technology for practical learning.',
+                radius: 2.0,
+                sphere: null,
+                active: false
+            },
+            {
+                position: new THREE.Vector3(74.12, 4.23, -243.78), // Near Workshop
+                image: 'info/workshop_info.jpg',
+                text: 'The Workshop provides hands-on experience in various technical fields.',
+                radius: 2.0,
+                sphere: null,
+                active: false
+            },
+            {
+                position: new THREE.Vector3(-110.69, 3.85, -116.70), // Near Sport Hall
+                image: 'info/sport_hall_info.jpg',
+                text: 'The Sport Hall is a multi-purpose facility for sports and events.',
+                radius: 2.0,
+                sphere: null,
+                active: false
+            },
+            {
+                position: new THREE.Vector3(62.28, 2.64, -84.68), // Near Masjid Madinatul Ilm'
+                image: 'info/masjid_info.jpg',
+                text: 'Masjid Madinatul Ilm\' is a place of worship and community gathering.',
+                radius: 2.0,
+                sphere: null,
+                active: false
+            }
+        ];
+
+        // Create visible teleport and info points
         teleportPoints.forEach(point => {
             const geometry = new THREE.SphereGeometry(0.3, 32, 32);
             const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.7 });
             point.sphere = new THREE.Mesh(geometry, material);
             point.sphere.position.copy(point.position);
             scene.add(point.sphere);
+            point.sphere.scale.set(1, 1, 1);
+            point.pulsePhase = Math.random() * Math.PI * 2;
+        });
 
-            // Add subtle pulsing animation
+        infoPoints.forEach(point => {
+            const geometry = new THREE.SphereGeometry(0.3, 32, 32);
+            const material = new THREE.MeshBasicMaterial({ color: 0x0000ff, transparent: true, opacity: 0.7 });
+            point.sphere = new THREE.Mesh(geometry, material);
+            point.sphere.position.copy(point.position);
+            scene.add(point.sphere);
             point.sphere.scale.set(1, 1, 1);
             point.pulsePhase = Math.random() * Math.PI * 2;
         });
@@ -492,7 +697,7 @@ header('Content-Type: text/html; charset=UTF-8');
         raycaster.ray.direction.set(0, -1, 0);
         const gravity = 0.1;
 
-        // Basic collision detection rays (forward, backward, left, right)
+        // Basic collision detection rays
         const collisionRays = [
             new THREE.Raycaster(),
             new THREE.Raycaster(),
@@ -530,9 +735,27 @@ header('Content-Type: text/html; charset=UTF-8');
             controls.getObject().position.set(x, y, z);
         }
 
-        // START COORDINATE DISPLAY JS - Remove this block to disable coordinate display
+        // Info popup handling
+        const infoPopup = document.getElementById('infoPopup');
+        const infoImage = document.getElementById('infoImage');
+        const infoText = document.getElementById('infoText');
+        const closePopup = document.getElementById('closePopup');
+
+        function showInfoPopup(imageSrc, text) {
+            infoImage.src = imageSrc;
+            infoText.textContent = text;
+            infoPopup.style.display = 'block';
+        }
+
+        function hideInfoPopup() {
+            infoPopup.style.display = 'none';
+            infoPoints.forEach(point => point.active = false);
+        }
+
+        closePopup.addEventListener('click', hideInfoPopup);
+
+        // Coordinate display
         const coordDisplay = document.getElementById('coordinates');
-        // END COORDINATE DISPLAY JS
 
         // Animation loop
         function animate() {
@@ -613,23 +836,36 @@ header('Content-Type: text/html; charset=UTF-8');
             // Update camera position
             controls.getObject().position.add(velocity);
 
-            // Check for teleport points
+            // Check teleport points
             teleportPoints.forEach(point => {
-                // Pulse animation
                 point.pulsePhase += 0.05;
                 const scale = 1 + 0.1 * Math.sin(point.pulsePhase);
                 point.sphere.scale.set(scale, scale, scale);
 
-                // Check distance to teleport point
                 const distance = camera.position.distanceTo(point.position);
                 if (distance < point.radius) {
                     teleportTo(point.destination.x, point.destination.y, point.destination.z);
                 }
             });
 
-            // START COORDINATE DISPLAY UPDATE - Remove this block to disable coordinate display
+            // Check info points
+            infoPoints.forEach(point => {
+                point.pulsePhase += 0.05;
+                const scale = 1 + 0.1 * Math.sin(point.pulsePhase);
+                point.sphere.scale.set(scale, scale, scale);
+
+                const distance = camera.position.distanceTo(point.position);
+                if (distance < point.radius && !point.active) {
+                    point.active = true;
+                    showInfoPopup(point.image, point.text);
+                } else if (distance >= point.radius && point.active) {
+                    point.active = false;
+                    hideInfoPopup();
+                }
+            });
+
+            // Update coordinate display
             coordDisplay.textContent = `X: ${camera.position.x.toFixed(2)}, Y: ${camera.position.y.toFixed(2)}, Z: ${camera.position.z.toFixed(2)}`;
-            // END COORDINATE DISPLAY UPDATE
 
             renderer.render(scene, camera);
         }
