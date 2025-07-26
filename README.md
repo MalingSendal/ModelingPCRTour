@@ -59,9 +59,9 @@ This project is an interactive 3D virtual tour of the PCR campus, allowing users
 | Panel Teleportasi         | ✅ Implementasi selesai  |
 | Peta Kampus               | ✅ Implementasi selesai  |
 | Multi Gedung              | ✅ Implementasi selesai  |
-| Deteksi Tabrakan          | ⏳ Dalam pengembangan   |
-| Ruang Dalam Gedung        | ⏳ Direncanakan         |
-| Hotspot Audio/Info        | ⏳ Direncanakan         |
+| Deteksi Tabrakan          | ✅ Implementasi selesai  |
+| Ruang Dalam Gedung        | ✅ Implementasi selesai  |
+| Hotspot Audio/Info        | ⏳ Direncanakan          |
 
 ---
 
