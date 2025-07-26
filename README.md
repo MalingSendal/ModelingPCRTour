@@ -21,17 +21,24 @@ This project is an interactive 3D virtual tour of the PCR campus, allowing users
 
 ```
 .
-├── index.php         # Main landing page with campus map
-├── utama.php         # Gedung Utama 3D tour
-├── kantin.php        # Kantin 3D tour
-├── masjid.php        # Masjid 3D tour
-├── gsg.php           # Gedung Serba Guna 3D tour
-├── workshop.php      # Workshop 3D tour
-├── sport.php         # Sport Hall 3D tour
-├── includes/         # PHP includes (scene, UI, controls, teleport, etc.)
-├── images/           # Logos, maps, and other images
-├── assets/           # 3D models (.glb)
-└── README.md
+├── .gitignore                  # Git ignore rules
+├── debug_virtual_tour.php      # Debug version of the virtual tour
+├── gsg.php                     # Gedung Serba Guna 3D tour
+├── halaman.html                # Static HTML page (additional reference)
+├── index.php                   # Main landing page with campus map
+├── kantin.php                  # Kantin 3D tour
+├── masjid.php                  # Masjid 3D tour
+├── README.md                   # Project overview and documentation
+├── school.glb                  # 3D model of the school (if used)
+├── sport.php                   # Sport Hall 3D tour
+├── test.txt                    # Test file (for commit testing)
+├── utama.php                   # Gedung Utama 3D tour
+├── virtual_tour.php            # Virtual tour entry point
+├── workshop.php                # Workshop 3D tour
+├── assets/                     # 3D models (.glb)
+├── images/                     # Logos, maps, and other images
+├── includes/                   # PHP includes (scene, UI, controls, teleport, etc.)
+└── info/                       # Info images for hotspots
 ```
 
 ---

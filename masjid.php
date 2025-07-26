@@ -177,6 +177,7 @@ header('Content-Type: text/html; charset=UTF-8');
             color: #004d61;
             font-size: 16px;
             line-height: 1.5;
+            text-align: justify;
         }
 
         #closePopup {
@@ -218,24 +219,27 @@ header('Content-Type: text/html; charset=UTF-8');
 </head>
 <body>
     <div id="instructions">
-        <p>Use WASD to move, hold left-click and drag to look around.</p>
-        <p>Click menu button to open navigation.</p>
-        <p>Approach glowing spheres to teleport or blue spheres for info.</p>
+        <p>WASD untuk bergerak, tahan klik kiri dan seret untuk melihat sekeliling.</p>
+        <p>Klik tombol menu untuk membuka navigasi.</p>
+        <p>Dekati bola hijau untuk teleportasi atau bola biru untuk informasi.</p>
     </div>
     <button id="menuButton">☰</button>
     <div id="sidePanel">
-        <button id="mainMenuButton">Back to Main Menu</button>
+        <button id="mainMenuButton">Kembali ke Main Menu</button>
         <h3 onclick="toggleMenu('buildingA')">Gedung Utama</h3>
         <div id="buildingA" class="submenu">
+            <button onclick="teleportTo(-6.40, 5.73, -10.13)">Gerbang Utama</button>
             <button onclick="teleportTo(-204, 3.25, -97.04)">Kelas</button>
-            <button onclick="teleportTo(-210.29, 2.90, -90.90)">Laboratorium</button>
+            <button onclick="teleportTo(-210.29, 2.90, -90.90)">Laboratorium JTI</button>
+            <button onclick="teleportTo(-322.76, 3.23, -99)">Laboratorium JTIN</button>
             <button onclick="teleportTo(-260.74, 2.59, -94.50)">Perpustakaan</button>
         </div>
         <h3 onclick="toggleMenu('buildingB')">Gedung Serba Guna</h3>
         <div id="buildingB" class="submenu">
-            <button onclick="teleportTo(-77.65, 3.00, -145.04)">Class</button>
-            <button onclick="teleportTo(35, 1.6, 35)">Lab</button>
-            <button onclick="teleportTo(40, 1.6, 40)">Auditorium</button>
+            <button onclick="teleportTo(-77.65, 3.00, -145.04)">Gerbang Utama</button>
+            <button onclick="teleportTo(-375.32, 2.53, -96.05)">Class</button>
+            <button onclick="teleportTo(-330.10, 2.74, -95.42)">Lab</button>
+            <button onclick="teleportTo(-401.14, 2.43, -94.03)">Hall</button>
         </div>
         <h3 onclick="teleportTo(118.88, 2.47, -80.25)" style="cursor:pointer; margin:10px 0;">Kantin</h3>
         <h3 onclick="teleportTo(74.12, 4.23, -243.78)" style="cursor:pointer; margin:10px 0;">Workshop</h3>
@@ -402,13 +406,6 @@ header('Content-Type: text/html; charset=UTF-8');
                 //Wing Kiri to Lantai Tiga
                 position: new THREE.Vector3(-24.44, 12.76, -36.11), // Teleport point location
                 destination: new THREE.Vector3(-24.91, 11.90, -46.85), // Destination
-                radius: 1.0, // Trigger distance
-                sphere: null // Will hold the visible sphere mesh
-            },
-            {
-                //To Labor JTI Test
-                position: new THREE.Vector3(-6.60, 5.56, -32.97), // Teleport point location
-                destination: new THREE.Vector3(-210.29, 2.90, -90.90), // Destination
                 radius: 1.0, // Trigger distance
                 sphere: null // Will hold the visible sphere mesh
             },
@@ -588,6 +585,34 @@ header('Content-Type: text/html; charset=UTF-8');
                 sphere: null // Will hold the visible sphere mesh
             },
             {
+                //To Labor JTIN #3
+                position: new THREE.Vector3(-18.36, 8.32, -94), // Teleport point location
+                destination: new THREE.Vector3(-322.76, 3.23, -99), // Destination
+                radius: 1.0, // Trigger distance
+                sphere: null // Will hold the visible sphere mesh
+            },
+            {
+                //To Labor JTIN #4
+                position: new THREE.Vector3(-20.87, 8.31, -94), // Teleport point location
+                destination: new THREE.Vector3(-322.76, 3.23, -99), // Destination
+                radius: 1.0, // Trigger distance
+                sphere: null // Will hold the visible sphere mesh
+            },
+            {
+                //To Labor JTIN #5
+                position: new THREE.Vector3(-31.11, 8.30, -94), // Teleport point location
+                destination: new THREE.Vector3(-322.76, 3.23, -99), // Destination
+                radius: 1.0, // Trigger distance
+                sphere: null // Will hold the visible sphere mesh
+            },
+            {
+                //To Labor JTIN #6
+                position: new THREE.Vector3(-39.45, 8.29, -91.71), // Teleport point location
+                destination: new THREE.Vector3(-322.76, 3.23, -99), // Destination
+                radius: 1.0, // Trigger distance
+                sphere: null // Will hold the visible sphere mesh
+            },
+            {
                 //Keluar Labor JTIN
                 position: new THREE.Vector3(-321.72, 2.91, -90.67), // Teleport point location
                 destination: new THREE.Vector3(-31, 4.66, -89.79), // Destination
@@ -600,82 +625,129 @@ header('Content-Type: text/html; charset=UTF-8');
                 destination: new THREE.Vector3(-36, 3.95, -34), // Destination
                 radius: 1.0, // Trigger distance
                 sphere: null // Will hold the visible sphere mesh
+            },
+            {
+                //Keluar Kelas GSG
+                position: new THREE.Vector3(-373.27, 2.40, -89.92), // Teleport point location
+                destination: new THREE.Vector3(-77.65, 3.00, -145.04), // Destination
+                radius: 1.0, // Trigger distance
+                sphere: null // Will hold the visible sphere mesh
+            },
+            {
+                //Keluar Labor GSG
+                position: new THREE.Vector3(-329.77, 2.76, -90.01), // Teleport point location
+                destination: new THREE.Vector3(-77.65, 3.00, -145.04), // Destination
+                radius: 1.0, // Trigger distance
+                sphere: null // Will hold the visible sphere mesh
+            },
+            {
+                //Keluar Hall GSG
+                position: new THREE.Vector3(-397.75, 2.31, -93.91), // Teleport point location
+                destination: new THREE.Vector3(-77.65, 3.00, -145.04), // Destination
+                radius: 1.0, // Trigger distance
+                sphere: null // Will hold the visible sphere mesh
+            },
+            {
+                //To Floor 1 dari Floor 2
+                position: new THREE.Vector3(-44.92, 9.29, -93.02), // Teleport point location
+                destination: new THREE.Vector3(-39.76, 4.65, -92.02), // Destination
+                radius: 1.0, // Trigger distance
+                sphere: null // Will hold the visible sphere mesh
             }
         ];
 
         // Info points setup
         const infoPoints = [
             {
+                position: new THREE.Vector3(-6.60, 5.56, -32.97), // Near MainHall
+                image: 'info/hall_info.jpg',
+                text: 'Mainhall Politeknik Caltex Riau (PCR) terletak di depan pintu utama PCR yang cukup luas sehingga bisa menampung 100 - 200 tempat duduk. Sebagai pintu masuk PCR, mainhall terkesan sedikit unik dan menarik sehingga jika melewati mainhall tersebut sangat kental dengan suasana akademik dari civitas akademika yang ada didalamnya, karena dari mainhall sudah bisa melihat posisi perpustakaan dan auditorium PCR yang ada dilantai 2 dan 3 serta hiruk pikuk kegiatan mahasiswa yang selalu lalu lalang disekitar mainhall.',
+                radius: 2.0,
+                sphere: null
+            },
+            {
                 position: new THREE.Vector3(-204, 3.25, -97.04), // Near Kelas
                 image: 'info/kelas_info.jpg',
-                text: 'Welcome to the Classroom! This is where students engage in daily learning activities.',
+                text: 'PCR memiliki 27 Ruang kelas yang berukuran  70,56 m2 dimana setiap ruangannya dapat memuat 36 Tempat duduk dengan dilengkapi fasilitas AC dan Proyektor serta Screen untuk membantu kenyamanan dalam proses Belajar Mengajar di Kelas.',
                 radius: 2.0,
-                sphere: null,
-                active: false
+                sphere: null
             },
             {
                 position: new THREE.Vector3(-260.74, 2.59, -94.50), // Near Perpustakaan
                 image: 'info/library_info.jpg',
-                text: 'The Library offers a vast collection of books and resources for students and faculty.',
+                text: 'Perpustakaan PCR\' dilengkapi dengan koleksi buku-buku, bahan kuliah, dan jurnal-jurnal yang dapat menambah wawasan mahasiswa. Keberadaan perpustakaan ini yakni untuk memberikan layanan informasi untuk kegiatan belajar, penelitian, dan pengabdian masyarakat dalam rangka melaksanakan Tri Dharma Perguruan Tinggi.',
                 radius: 2.0,
-                sphere: null,
-                active: false
+                sphere: null
             },
             {
                 position: new THREE.Vector3(118.88, 2.47, -80.25), // Near Kantin
                 image: 'info/canteen_info.jpg',
-                text: 'The Canteen is a popular spot for students to enjoy meals and socialize.',
+                text: 'Kantin De-Pipe\' menyediakan segala macam menu terbaik mulai dari Sarapan Pagi sampai dengan Makan Siang dengan harga terjangkau dan nikmat. Banyaknya menu pilihan sehingga membuat civitas akademik (Mahasiswa, staf dan Dosen) tidak jauh-jauh keluar kampus untuk mencari makan siang sehingga kegiatan di kampus dapat berjalan sesuai waktu yang ditetapkan',
                 radius: 2.0,
-                sphere: null,
-                active: false
+                sphere: null
             },
             {
                 position: new THREE.Vector3(-210.29, 2.87, -90.90), // Near LabJTI
                 image: 'info/labJTI_info.jpg',
-                text: 'The Laboratorium is equipped with advanced technology for practical learning.',
+                text: 'Laboratorium PCR digunakan membantu proses belajar mengajar secara praktek dengan kapasitas setiap Laboratoriumnya sebanyak 30 – 36 tempat duduk yang pengelolaannya dibawah Jurusan yang ada di PCR yaitu Jurusan Komputer, Jurusan Elektro dan Jurusan Akuntansi dan Bisnis.',
                 radius: 2.0,
-                sphere: null,
-                active: false
+                sphere: null
             },
             {
-                position: new THREE.Vector3(-322.96, 2.91, -98.99), // Near LabJTIN
+                position: new THREE.Vector3(-322.96, 3.4, -98.99), // Near LabJTIN
                 image: 'info/labJTIN_info.jpg',
-                text: 'The Laboratorium is equipped with advanced technology for practical learning.',
+                text: 'Laboratorium PCR digunakan membantu proses belajar mengajar secara praktek dengan kapasitas setiap Laboratoriumnya sebanyak 30 – 36 tempat duduk yang pengelolaannya dibawah Jurusan yang ada di PCR yaitu Jurusan Komputer, Jurusan Elektro dan Jurusan Akuntansi dan Bisnis.',
                 radius: 2.0,
-                sphere: null,
-                active: false
+                sphere: null
             },
             {
                 position: new THREE.Vector3(74.12, 4.23, -243.78), // Near Workshop
                 image: 'info/workshop_info.jpg',
-                text: 'The Workshop provides hands-on experience in various technical fields.',
+                text: 'Workshop ini memiliki beberapa fasilitas seperti Mesin CNC, Mesin Bubut, Mesin Miling, Meja Kerja dan lain-lain. Workshop ini dipergunakan untuk proses akademik seperti perkuliahan praktikum.',
                 radius: 2.0,
-                sphere: null,
-                active: false
+                sphere: null
             },
             {
                 position: new THREE.Vector3(-110.69, 3.85, -116.70), // Near Sport Hall
                 image: 'info/sport_hall_info.jpg',
-                text: 'The Sport Hall is a multi-purpose facility for sports and events.',
+                text: 'Sporthall PCR\' memiliki beberapa arena olahraga seperti futsal, voli, bulu tangkis, dan bola basket. Diharapkan dengan adanya Sporthall ini, kegiatan mahasiswa dapat berjalan dengan baik, khususnya kegiatan yang bersifat olahraga.',
                 radius: 2.0,
-                sphere: null,
-                active: false
+                sphere: null
             },
             {
                 position: new THREE.Vector3(62.28, 2.64, -84.68), // Near Masjid Madinatul Ilm'
                 image: 'info/masjid_info.jpg',
-                text: 'Masjid Madinatul Ilm\' is a place of worship and community gathering.',
+                text: 'Masjid Madinatul ‘Ilmi\' yang mana jika diartikan secara harfiah berarti Kota Ilmu. Melalui nama ini para pendiri kampus ini mencita-citakan agar PCR menjadi pusat perkembangan ilmu pengetahuan. Lokasi masjid sangat strategis yaitu berada di tengah-tengah kampus. Ruangan direktur, kantin, Student Center, Auditorium, Amphi Theater dan Perpustakaan langsung berhadapan dengan masjid ini.',
                 radius: 2.0,
-                sphere: null,
-                active: false
-         },
+                sphere: null
+            },
             {
                 position: new THREE.Vector3(-77.65, 2.91, -145.04), // Near GSG
                 image: 'info/gsg_info.jpg',
-                text: 'Gedung Serba Guna (GSG)\' is a multi-purpose building for various activities.',
+                text: 'Gedung Serba Guna PCR\' terletak di sebelah barat Kampus Utama merupakan Gedung yang menyediakan Hall yang dapat difungsikan untuk tempat kegiatan yang dikelola oleh Yayasan dalam proses penyewaannya.',
                 radius: 2.0,
-                sphere: null,
-                active: false
+                sphere: null
+            },
+            {
+                position: new THREE.Vector3(-375.32, 2.9, -96.05), // Class GSG
+                image: 'info/class_gsg_info.jpg',
+                text: 'Kelas Pada GSG\' memiliki Ruang kelas yang dimana setiap ruangannya dapat memuat 36 Tempat duduk dengan dilengkapi fasilitas AC dan Proyektor serta Screen untuk membantu kenyamanan dalam proses Belajar Mengajar di Kelas.',
+                radius: 2.0,
+                sphere: null
+            },
+            {
+                position: new THREE.Vector3(-330.10, 2.74, -95.42), // Lab GSG
+                image: 'info/lab_gsg_info.jpg',
+                text: 'Laboratorium GSG digunakan membantu proses belajar mengajar secara praktek dengan kapasitas setiap Laboratoriumnya sebanyak 30 – 36 tempat duduk yang pengelolaannya dibawah Jurusan yang ada di PCR yaitu Jurusan Komputer, Jurusan Elektro dan Jurusan Akuntansi dan Bisnis.',
+                radius: 2.0,
+                sphere: null
+            },
+            {
+                position: new THREE.Vector3(-401.14, 2.43, -94.03), // Hall GSG
+                image: 'info/hall_gsg_info.jpg',
+                text: 'Hall GSG\' dapat difungsikan sebagai tempat kegiatan yang menampung orang cukup banyak. Kapasitas yang dapat ditampung pada Hall GSG adalah sekitar 1500 – 2000 Orang yang dilengkapi dengan 2 Screen Proyektor, Panggung, Full AC, dan Soundsystem.',
+                radius: 2.0,
+                sphere: null
             }
         ];
 
@@ -819,6 +891,10 @@ header('Content-Type: text/html; charset=UTF-8');
                 collisionRays[i].ray.direction.copy(rayDirections[i]).applyQuaternion(controls.getObject().quaternion);
                 const collisions = collisionRays[i].intersectObjects(scene.children, true);
                 for (let collision of collisions) {
+                    // Skip collision with teleport (green) and info (blue) spheres
+                    if (collision.object.material && (collision.object.material.color.getHex() === 0x00ff00 || collision.object.material.color.getHex() === 0x0000ff)) {
+                        continue;
+                    }
                     if (collision.distance < 0.5) {
                         canMove = false;
                         collisionDirection = rayDirections[i];
