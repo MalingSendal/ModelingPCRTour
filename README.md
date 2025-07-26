@@ -9,87 +9,87 @@ This project is an interactive 3D virtual tour of the PCR campus, allowing users
 
 ## 🚀 Features
 
-- **Interactive 3D Navigation:** Move around the campus using keyboard and mouse controls.
-- **Teleportation:** Instantly jump to key locations via the side panel.
-- **Campus Map:** Start your journey by selecting locations from a visual campus map.
-- **Responsive UI:** Clean and modern interface, works on desktop and mobile.
-- **Modular Codebase:** Organized PHP includes for easy maintenance and extension.
+- **Interactive 3D Navigation:** Jelajahi area kampus menggunakan kontrol keyboard dan mouse.
+- **Teleportasi:** Lompat langsung ke lokasi-lokasi kunci melalui panel navigasi.
+- **Peta Kampus:** Mulai perjalanan dengan memilih lokasi dari peta kampus yang interaktif.
+- **Antarmuka Responsif:** Tampilan yang modern dan bersih untuk desktop dan mobile.
+- **Codebase Modular:** Struktur kode PHP yang terorganisir untuk memudahkan pemeliharaan dan perluasan fitur.
 
 ---
 
-## 🏗️ Project Structure
+## 🏗️ Struktur Proyek
 
 ```
 .
-├── .gitignore                  # Git ignore rules
-├── debug_virtual_tour.php      # Debug version of the virtual tour
-├── gsg.php                     # Gedung Serba Guna 3D tour
-├── halaman.html                # Static HTML page (additional reference)
-├── index.php                   # Main landing page with campus map
-├── kantin.php                  # Kantin 3D tour
-├── masjid.php                  # Masjid 3D tour
-├── README.md                   # Project overview and documentation
-├── school.glb                  # 3D model of the school (if used)
-├── sport.php                   # Sport Hall 3D tour
-├── test.txt                    # Test file (for commit testing)
-├── utama.php                   # Gedung Utama 3D tour
-├── virtual_tour.php            # Virtual tour entry point
-├── workshop.php                # Workshop 3D tour
-├── assets/                     # 3D models (.glb)
-├── images/                     # Logos, maps, and other images
-├── includes/                   # PHP includes (scene, UI, controls, teleport, etc.)
-└── info/                       # Info images for hotspots
+├── .gitignore                  # Aturan untuk mengabaikan file yang tidak perlu di Git
+├── debug_virtual_tour.php      # Versi debug dari virtual tour
+├── gsg.php                     # Tour 3D untuk Gedung Serba Guna
+├── halaman.html                # Halaman HTML statis (referensi tambahan)
+├── index.php                   # Halaman depan dengan peta kampus
+├── kantin.php                  # Tour 3D untuk Kantin
+├── masjid.php                  # Tour 3D untuk Masjid
+├── README.md                   # Dokumentasi dan gambaran proyek
+├── school.glb                  # Model 3D sekolah (jika digunakan)
+├── sport.php                   # Tour 3D untuk Sport Hall
+├── test.txt                    # File uji (untuk commit testing)
+├── utama.php                   # Tour 3D untuk Gedung Utama
+├── virtual_tour.php            # Titik masuk untuk virtual tour
+├── workshop.php                # Tour 3D untuk Workshop
+├── assets/                     # Model 3D (.glb)
+├── images/                     # Logo, peta, dan gambar-gambar lainnya
+└── info/                       # Gambar info untuk hotspot
 ```
 
 ---
 
-## 🕹️ Controls
+## 🕹️ Kontrol
 
-- **Move:** `W` (forward), `A` (left), `S` (back), `D` (right)
-- **Look Around:** Mouse drag
-- **Teleport:** Use the side panel to jump to locations
-- **Back to Menu:** Use the button in the side panel
-
----
-
-## 📈 Development Progress
-
-| Feature                | Status         |
-|------------------------|---------------|
-| 3D Navigation          | ✅ Implemented |
-| Teleportation Panel    | ✅ Implemented |
-| Campus Map             | ✅ Implemented |
-| Multiple Buildings     | ✅ Implemented |
-| Collision Detection    | ⏳ In Progress |
-| Building Interiors     | ⏳ Planned     |
-| Audio/Info Hotspots    | ⏳ Planned     |
+- **Gerak:** `W` (maju), `A` (kiri), `S` (mundur), `D` (kanan)
+- **Lihat Sekeliling:** Drag mouse
+- **Teleportasi:** Gunakan panel navigasi untuk berpindah ke lokasi tertentu
+- **Kembali ke Menu:** Klik tombol pada panel navigasi
 
 ---
 
-## 🛠️ Getting Started
+## 📈 Progress Pengembangan
 
-1. **Access the website at www.xxxxxx.com**
-2. **asdsadsaa**
+| Fitur                     | Status         |
+|---------------------------|---------------|
+| Navigasi 3D               | ✅ Implementasi selesai  |
+| Panel Teleportasi         | ✅ Implementasi selesai  |
+| Peta Kampus               | ✅ Implementasi selesai  |
+| Multi Gedung              | ✅ Implementasi selesai  |
+| Deteksi Tabrakan          | ⏳ Dalam pengembangan   |
+| Ruang Dalam Gedung        | ⏳ Direncanakan         |
+| Hotspot Audio/Info        | ⏳ Direncanakan         |
+
+---
+
+## 🛠️ Memulai Proyek
+
+1. **Clone repository ini** dan siapkan server web PHP pada lingkungan lokal Anda.
+2. **Pastikan environment Anda** dapat mengakses Three.js via CDN.
+3. **Akses situs** melalui URL lokal (misal: http://localhost/).
 
 ---
 
 ## 📦 Dependencies
 
 - [Three.js](https://threejs.org/) (via CDN)
-- GLTFLoader (for loading `.glb` models)
+- GLTFLoader (untuk memuat file `.glb`)
 
 ---
 
-## 🤝 Contributing
+## 🤝 Kontribusi
 
-Contributions are welcome!  
-Feel free to open issues or submit pull requests as the project evolves.
+Kontribusi sangat dianjurkan!  
+Silahkan buka issue atau submit pull request seiring perkembangan proyek.
 
 ---
 
-## 📄 License
+## 📄 Lisensi
 
-This project is for educational purposes at Politeknik Caltex Riau.
+Proyek ini digunakan untuk tujuan pendidikan di Politeknik Caltex Riau.
 
 ---
 
